@@ -175,6 +175,15 @@ h1 {
   font-size: 1.3rem;
 }
 
+.card h3 a {
+  color: inherit;
+}
+
+.card h3 a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 .card p {
   margin-bottom: 0;
   color: var(--muted);
@@ -197,6 +206,15 @@ h1 {
 .featured-copy h3 {
   margin: 0 0 12px;
   font-size: clamp(1.9rem, 3vw, 2.6rem);
+}
+
+.featured-copy h3 a {
+  color: inherit;
+}
+
+.featured-copy h3 a:hover {
+  color: var(--accent);
+  text-decoration: underline;
 }
 
 .featured-copy p {
