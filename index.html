@@ -1,810 +1,133 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connecting an On-Premises Data Source to Microsoft Fabric Using Private Link Service Direct Connect</title>
-    <meta
-      name="description"
-      content="My hands-on journey connecting a Microsoft Fabric Notebook to an on-premises SQL Server securely with Azure Private Link Service Direct Connect."
-    />
-    <style>
-      :root {
-        --bg: #0b1320;
-        --panel: #101826;
-        --panel-strong: #111827;
-        --text: #e5e7eb;
-        --muted: #a8b2c0;
-        --soft: #cfd6de;
-        --accent: #68d0ff;
-        --accent-2: #7dd3fc;
-        --border: rgba(148, 163, 184, 0.18);
-        --code-bg: rgba(15, 23, 42, 0.9);
-        --shadow: rgba(2, 6, 23, 0.45);
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(180deg, #08101a 0%, #0f172a 100%);
-        color: var(--text);
-        line-height: 1.7;
-      }
-
-      .page {
-        max-width: 920px;
-        margin: 0 auto;
-        padding: 48px 24px 80px;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 18px;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 28px;
-      }
-
-      .brand {
-        font-size: 0.9rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.18em;
-        color: var(--accent-2);
-      }
-
-      .brand a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .meta {
-        font-size: 0.78rem;
-        color: var(--muted);
-        letter-spacing: 0.03em;
-      }
-
-      .article {
-        background: rgba(16, 24, 38, 0.92);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        box-shadow: 0 18px 45px var(--shadow);
-        padding: 30px 32px 42px;
-      }
-
-      h1, h2, h3, h4 {
-        color: var(--text);
-        line-height: 1.2;
-        margin-top: 1.6em;
-        margin-bottom: 0.8em;
-      }
-
-      h1 {
-        font-size: clamp(2.2rem, 5vw, 3.3rem);
-        margin-top: 0.3em;
-      }
-
-      h2 {
-        font-size: clamp(1.5rem, 2vw, 2.1rem);
-      }
-
-      h3 {
-        font-size: 1.2rem;
-      }
-
-      p, li {
-        color: var(--soft);
-        font-size: 1.06rem;
-      }
-
-      p {
-        margin: 0 0 1.2em;
-      }
-
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      blockquote {
-        margin: 1.3em 0;
-        padding: 0.6em 1em 0.6em 1.2em;
-        border-left: 4px solid var(--accent-2);
-        background: rgba(125, 211, 252, 0.06);
-        color: var(--text);
-      }
-
-      ul, ol {
-        padding-left: 1.5rem;
-      }
-
-      li + li {
-        margin-top: 0.4rem;
-      }
-
-      code, pre {
-        font-family: Consolas, "Courier New", monospace;
-      }
-
-      pre {
-        background: var(--code-bg);
-        color: #dbeafe;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow-x: auto;
-        padding: 1rem 1.1rem;
-        margin: 1.2em 0;
-        line-height: 1.55;
-      }
-
-      code {
-        background: rgba(59, 130, 246, 0.1);
-        border: 1px solid rgba(96, 165, 250, 0.15);
-        border-radius: 6px;
-        padding: 0.12rem 0.35rem;
-        font-size: 0.95em;
-      }
-
-      .subtitle {
-        color: var(--muted);
-        font-size: 1.05rem;
-        margin-bottom: 1.4em;
-      }
-
-      .callout {
-        background: rgba(103, 232, 249, 0.05);
-        border: 1px solid rgba(103, 232, 249, 0.2);
-        border-radius: 12px;
-        padding: 1rem 1.1rem;
-        margin: 1.6em 0;
-      }
-
-      .feature-visual {
-        margin: 1.8em 0 2.1em;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        overflow: hidden;
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(17, 24, 39, 0.92));
-      }
-
-      .feature-visual svg {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
-
-      .diagram-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 18px;
-        margin: 1.6em 0 2em;
-      }
-
-      .diagram-card {
-        background: rgba(17, 24, 39, 0.82);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 12px;
-      }
-
-      .diagram-card svg {
-        display: block;
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-      }
-
-      .reference-list {
-        padding-left: 1.2rem;
-      }
-
-      .reference-list li {
-        margin-bottom: 0.4rem;
-      }
-
-      .footer {
-        margin-top: 26px;
-        padding-top: 18px;
-        border-top: 1px solid var(--border);
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      @media (max-width: 700px) {
-        .page {
-          padding-left: 16px;
-          padding-right: 16px;
-        }
-
-        .article {
-          padding: 18px 20px 28px;
-        }
-
-        .topbar {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
-        }
-      }
-    </style>
+    <title>dk-clouddusk | Azure blog</title>
+    <meta name="description" content="Azure, Microsoft Fabric, and cloud networking notes from real-world implementation work." />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="page">
+    <div class="container">
       <header class="topbar">
-        <div class="brand"><a href="https://medium.com/@dkzorin/absolutely-6d3cf954e390">dk-clouddusk</a></div>
-        <div class="meta">Microsoft Fabric • Azure Private Link • SQL Connectivity</div>
+        <div class="brand">dk-clouddusk</div>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#home">Home</a>
+          <a href="#featured">Featured</a>
+          <a href="#posts">Posts</a>
+          <a href="#about">About</a>
+        </nav>
       </header>
 
-      <main class="article">
-        <h1>Connecting an On-Premises Data Source to Microsoft Fabric Using Private Link Service Direct Connect</h1>
-        <p class="subtitle">My hands-on journey connecting a Microsoft Fabric Notebook to an on-premises SQL Server</p>
+      <main>
+        <section class="hero" id="home">
+          <div class="hero-inner">
+            <div class="hero-tag">Azure blog</div>
+            <h1>Real-world Azure and Fabric notes from the field.</h1>
+            <p class="lead">
+              Practical cloud architecture, networking, and Microsoft Fabric learnings for engineers solving real production problems.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#featured">Read featured post</a>
+              <a class="button" href="#posts">Browse all posts</a>
+            </div>
+          </div>
+        </section>
 
-        <p>Recently, I wanted to solve a simple problem:</p>
-
-        <blockquote>
-          How can I connect a Microsoft Fabric Notebook to an on-premises SQL Server securely, without exposing the SQL Server to the public internet?
-        </blockquote>
-
-        <p>I expected this to be mostly a JDBC configuration.</p>
-
-        <p>It wasn’t. 😄</p>
-
-        <p>What started as a database connectivity task turned into a great hands-on learning experience involving Microsoft Fabric, Azure Private Link, Private Link Service Direct Connect, DNS, networking, Linux, SQL Server, and PySpark JDBC.</p>
-
-        <p>This post captures what I learned along the way.</p>
-
-        <div class="feature-visual" aria-label="Article architecture overview">
-          <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="archTitle archDesc">
-            <title id="archTitle">Private connectivity architecture</title>
-            <desc id="archDesc">Diagram showing Microsoft Fabric Notebook connecting through a managed private endpoint and Azure Private Link Service before reaching an on-premises SQL Server via private networking.</desc>
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1">
-                <stop offset="0%" stop-color="#60a5fa"/>
-                <stop offset="100%" stop-color="#a78bfa"/>
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="900" height="320" fill="#0f172a"/>
-            <rect x="40" y="110" width="160" height="90" rx="16" fill="#111827" stroke="#60a5fa"/>
-            <text x="120" y="150" text-anchor="middle" fill="#dbeafe" font-size="20" font-family="Segoe UI, sans-serif">Fabric</text>
-            <text x="120" y="178" text-anchor="middle" fill="#9fb7d6" font-size="16" font-family="Segoe UI, sans-serif">Notebook</text>
-
-            <path d="M200 155 H290" stroke="url(#g1)" stroke-width="4" fill="none"/>
-            <path d="M290 155 L300 155" stroke="url(#g1)" stroke-width="4" fill="none"/>
-            <path d="M290 155 L290 110 M290 155 L290 200" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.7"/>
-
-            <rect x="300" y="75" width="190" height="150" rx="18" fill="#111827" stroke="#7dd3fc"/>
-            <text x="395" y="128" text-anchor="middle" fill="#dbeafe" font-size="19" font-family="Segoe UI, sans-serif">Managed</text>
-            <text x="395" y="156" text-anchor="middle" fill="#dbeafe" font-size="19" font-family="Segoe UI, sans-serif">Private</text>
-            <text x="395" y="184" text-anchor="middle" fill="#dbeafe" font-size="19" font-family="Segoe UI, sans-serif">Endpoint</text>
-
-            <path d="M490 155 H560" stroke="url(#g1)" stroke-width="4" fill="none"/>
-            <rect x="560" y="95" width="180" height="120" rx="18" fill="#111827" stroke="#34d399"/>
-            <text x="650" y="140" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Private Link</text>
-            <text x="650" y="170" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Service</text>
-            <text x="650" y="196" text-anchor="middle" fill="#9fb7d6" font-size="12" font-family="Segoe UI, sans-serif">Direct Connect</text>
-
-            <path d="M740 155 H810" stroke="url(#g1)" stroke-width="4" fill="none"/>
-            <path d="M810 155 L850 155" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.7"/>
-            <rect x="790" y="110" width="80" height="90" rx="14" fill="#16212f" stroke="#a78bfa"/>
-            <text x="830" y="145" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">VPN</text>
-            <text x="830" y="172" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">/ER</text>
-
-            <rect x="590" y="255" width="260" height="38" rx="12" fill="#111827" stroke="#fbbf24"/>
-            <text x="720" y="281" text-anchor="middle" fill="#fef3c7" font-size="18" font-family="Segoe UI, sans-serif">On-Prem SQL Server</text>
-
-            <path d="M650 215 V255" stroke="#fbbf24" stroke-width="3" fill="none"/
-            <path d="M650 215 V255" stroke="#fbbf24" stroke-width="3" fill="none"/>
-          </svg>
-        </div>
-
-        <h2>The goal</h2>
-
-        <p>The end goal was:</p>
-
-        <pre>Microsoft Fabric Notebook  →  Managed Private Endpoint  →  Private Link Service Direct Connect  →  Private network connectivity  →  VPN / ExpressRoute  →  On-Premises SQL Server</pre>
-
-        <p>I wanted the SQL Server to remain private and accessible only through the private networking path.</p>
-
-        <h2>1. Understanding the architecture</h2>
-
-        <p>The first thing I learned was that there are several different components involved.</p>
-
-        <p>At a high level:</p>
-
-        <ul>
-          <li>Fabric Notebook needs to reach the Managed Private Endpoint.</li>
-          <li>The Managed Private Endpoint connects to an Azure Private Link Service.</li>
-          <li>The Private Link Service provides the private connection toward the destination.</li>
-          <li>For an on-premises scenario, the Azure environment also needs private connectivity to the on-premises network, typically through VPN or ExpressRoute.</li>
-        </ul>
-
-        <p>The important part is that the network path needs to work end-to-end.</p>
-
-        <div class="diagram-grid">
-          <div class="diagram-card" aria-label="Traditional architecture diagram">
-            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tradTitle tradDesc">
-              <title id="tradTitle">Traditional architecture</title>
-              <desc id="tradDesc">Traditional private connectivity architecture requiring load balancer and forwarding VM before on-premises SQL.</desc>
-              <rect x="0" y="0" width="420" height="260" fill="#0f172a"/>
-              <rect x="30" y="90" width="90" height="80" rx="12" fill="#111827" stroke="#60a5fa"/>
-              <text x="75" y="123" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Fabric</text>
-              <text x="75" y="147" text-anchor="middle" fill="#9fb7d6" font-size="15" font-family="Segoe UI, sans-serif">Notebook</text>
-              <rect x="150" y="72" width="120" height="115" rx="12" fill="#111827" stroke="#7dd3fc"/>
-              <text x="210" y="108" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Private Link</text>
-              <text x="210" y="133" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Service</text>
-              <text x="210" y="160" text-anchor="middle" fill="#9fb7d6" font-size="13" font-family="Segoe UI, sans-serif">Load Balancer</text>
-              <rect x="295" y="90" width="95" height="80" rx="12" fill="#111827" stroke="#34d399"/>
-              <text x="342" y="123" text-anchor="middle" fill="#dbeafe" font-size="16" font-family="Segoe UI, sans-serif">Forwarding</text>
-              <text x="342" y="147" text-anchor="middle" fill="#dbeafe" font-size="16" font-family="Segoe UI, sans-serif">VM</text>
-              <path d="M120 130 H150 M270 130 H295" stroke="#60a5fa" stroke-width="3" fill="none"/>
-              <path d="M342 170 V210 H110 V210" stroke="#94a3b8" stroke-width="2.5" fill="none" opacity="0.9"/>
-              <text x="220" y="232" text-anchor="middle" fill="#fef3c7" font-size="15" font-family="Segoe UI, sans-serif">On-Prem SQL</text>
-            </svg>
+        <section class="featured" id="featured">
+          <div class="section-header">
+            <h2>Featured article</h2>
+            <a class="meta-link" href="posts/2026-08-15-fabric-private-link.html">Open article</a>
           </div>
 
-          <div class="diagram-card" aria-label="Direct Connect architecture diagram">
-            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="directTitle directDesc">
-              <title id="directTitle">Direct Connect architecture</title>
-              <desc id="directDesc">Simplified Private Link Service Direct Connect pattern without extra load balancer and forwarding VM.</desc>
-              <rect x="0" y="0" width="420" height="260" fill="#0f172a"/>
-              <rect x="25" y="90" width="95" height="80" rx="12" fill="#111827" stroke="#60a5fa"/>
-              <text x="72" y="125" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Fabric</text>
-              <text x="72" y="150" text-anchor="middle" fill="#9fb7d6" font-size="15" font-family="Segoe UI, sans-serif">Notebook</text>
-              <rect x="145" y="72" width="120" height="115" rx="12" fill="#111827" stroke="#7dd3fc"/>
-              <text x="205" y="110" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Private Link</text>
-              <text x="205" y="136" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Service</text>
-              <text x="205" y="160" text-anchor="middle" fill="#9fb7d6" font-size="13" font-family="Segoe UI, sans-serif">Direct Connect</text>
-              <rect x="295" y="90" width="100" height="80" rx="12" fill="#111827" stroke="#34d399"/>
-              <text x="345" y="124" text-anchor="middle" fill="#dbeafe" font-size="15" font-family="Segoe UI, sans-serif">Private</text>
-              <text x="345" y="148" text-anchor="middle" fill="#dbeafe" font-size="15" font-family="Segoe UI, sans-serif">Network</text>
-              <path d="M120 130 H145 M265 130 H295" stroke="#60a5fa" stroke-width="3" fill="none"/>
-              <path d="M345 170 V210 H75 V210" stroke="#94a3b8" stroke-width="2.5" fill="none" opacity="0.9"/>
-              <text x="210" y="232" text-anchor="middle" fill="#fef3c7" font-size="15" font-family="Segoe UI, sans-serif">On-Prem SQL</text>
-            </svg>
+          <div class="featured-panel">
+            <div class="featured-copy">
+              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">August 15, 2026</div>
+              <h3>Connecting an On-Premises Data Source to Microsoft Fabric Using Private Link Service Direct Connect</h3>
+              <p>
+                A hands-on walkthrough of how to securely connect a Microsoft Fabric Notebook to an on-premises SQL Server using Private Link Service Direct Connect, DNS validation, and real troubleshooting steps.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Azure</span>
+                <span class="tag">Fabric</span>
+                <span class="tag">Networking</span>
+              </div>
+            </div>
+
+            <ul class="article-list">
+              <li>
+                <div class="post-card">
+                  <div class="date">Azure</div>
+                  <h4>Private networking pattern</h4>
+                  <p>How to keep the data source private while still enabling a Fabric Notebook to access it securely.</p>
+                </div>
+              </li>
+              <li>
+                <div class="post-card">
+                  <div class="date">Fabric</div>
+                  <h4>Managed private endpoints</h4>
+                  <p>Using the Fabric REST API to provision, verify, and approve the private link connection.</p>
+                </div>
+              </li>
+            </ul>
           </div>
-        </div>
-
-        <h2>2. Private Link Service Direct Connect</h2>
-
-        <p>While researching the architecture, I came across Private Link Service Direct Connect. (Public Preview)</p>
-
-        <p>This was particularly interesting because the traditional architecture can require additional Azure components such as an Internal Load Balancer and forwarding VMs.</p>
-
-        <p>With Direct Connect, the architecture can be simplified for suitable scenarios where the destination has a static private IP.</p>
-
-        <p>Conceptually:</p>
-
-        <pre>Fabric → Private Link Service → Direct Connect → Private network → On-Prem SQL</pre>
-
-        <p>Microsoft currently documents Direct Connect as a Public Preview capability, so it is important to check regional availability and the latest Microsoft documentation before using it in production.</p>
-
-        <h2>3. Enabling the Azure feature</h2>
-
-        <p>One of the prerequisites I encountered was the Azure feature flag:</p>
-
-        <pre>Microsoft.Network/AllowPrivateLinkserviceUDR</pre>
-
-        <p>I registered it using Azure CLI:</p>
-
-        <pre>az feature register \
-  --namespace Microsoft.Network \
-  --name AllowPrivateLinkserviceUDR</pre>
-
-        <p>Then I checked the status:</p>
-
-        <pre>az feature show \
-  --namespace Microsoft.Network \
-  --name AllowPrivateLinkserviceUDR \
-  --query "properties.state" \
-  -o tsv</pre>
-
-        <p>The status needs to eventually show:</p>
-
-        <pre>Registered</pre>
-
-        <p>I also registered the Microsoft.Network provider:</p>
-
-        <pre>az provider register --namespace Microsoft.Network</pre>
-
-        <p>This was a good reminder that Azure preview networking capabilities can have additional subscription-level prerequisites.</p>
-
-        <h2>4. Testing the network before Fabric</h2>
-
-        <p>One of the biggest lessons from this exercise was:</p>
-
-        <blockquote>Don’t start with Fabric. Start with the network.</blockquote>
-
-        <p>Before troubleshooting the Fabric Notebook, I tested connectivity from an Azure Ubuntu machine toward the SQL Server.</p>
-
-        <p>For example:</p>
-
-        <pre>nc -vz &lt;SQL_SERVER_IP&gt; 1433</pre>
-
-        <p>or:</p>
-
-        <pre>telnet &lt;SQL_SERVER_IP&gt; 1433</pre>
-
-        <p>SQL Server’s default TCP port is:</p>
-
-        <pre>1433</pre>
-
-        <p>If this test fails, there is no point troubleshooting JDBC or Fabric yet.</p>
-
-        <p>The problem is somewhere in:</p>
-
-        <pre>Azure VM → VPN / ExpressRoute → On-Prem Network → Firewall → SQL Server</pre>
-
-        <h2>5. DNS</h2>
-
-        <p>I also wanted to use a hostname instead of an IP:</p>
-
-        <pre>sqlserver.corp.clouddusk.local</pre>
-
-        <p>From Ubuntu, I could test DNS resolution with:</p>
-
-        <pre>getent hosts sqlserver.corp.clouddusk.local</pre>
-
-        <p>or:</p>
-
-        <pre>nslookup sqlserver.corp.clouddusk.local</pre>
-
-        <p>For temporary Ubuntu testing, an /etc/hosts entry can be used:</p>
-
-        <pre>&lt;PRIVATE_IP&gt; sqlserver.corp.clouddusk.local</pre>
-
-        <p>Then:</p>
-
-        <pre>getent hosts sqlserver.corp.clouddusk.local</pre>
-
-        <p>One important lesson here:</p>
-
-        <blockquote>/etc/hosts only affects that machine.</blockquote>
-
-        <p>It doesn’t automatically provide DNS resolution to Microsoft Fabric.</p>
-
-        <p>For production, DNS needs to be designed as part of the overall private connectivity architecture.</p>
-
-        <h2>6. Creating the Fabric Managed Private Endpoint</h2>
-
-        <p>I used the Fabric REST API to create the Managed Private Endpoint.</p>
-
-        <p>The endpoint is:</p>
-
-        <pre>POST https://api.fabric.microsoft.com/v1/workspaces/{workspaceId}/managedPrivateEndpoints</pre>
-
-        <p>The request body looked like:</p>
-
-        <pre>{
-  "name": "onprem-sql-endpoint",
-  "targetPrivateLinkResourceId": "&lt;PRIVATE_LINK_SERVICE_RESOURCE_ID&gt;",
-  "targetFQDNs": [
-    "sqlserver.corp.clouddusk.local"
-  ],
-  "requestMessage": "Private connection request from Fabric to on-premises SQL"
-}</pre>
-
-        <p>I tested this API using Hoppscotch, which was convenient because it allowed me to test the REST API directly from the browser.</p>
-
-        <p>The request uses a Microsoft Entra access token:</p>
-
-        <pre>Authorization: Bearer &lt;ACCESS_TOKEN&gt;</pre>
-
-        <p>and:</p>
-
-        <pre>Content-Type: application/json</pre>
-
-        <h2>7. An interesting error I encountered</h2>
-
-        <p>Initially, I included:</p>
-
-        <pre>"targetSubresourceType": "sql"</pre>
-
-        <p>The API returned:</p>
-
-        <pre>InvalidTargetSubResourceType</pre>
-
-        <p>That was a useful lesson.</p>
-
-        <p>Instead of guessing values such as <code>sql</code>, <code>sqlServer</code>, etc., I went back to the target resource configuration.</p>
-
-        <p>For my Direct Connect Private Link Service scenario, removing the unnecessary property allowed the Managed Private Endpoint to provision successfully.</p>
-
-        <p>The final request was:</p>
-
-        <pre>{
-  "name": "onprem-sql-endpoint",
-  "targetPrivateLinkResourceId": "&lt;PRIVATE_LINK_SERVICE_RESOURCE_ID&gt;",
-  "targetFQDNs": [
-    "sqlserver.corp.clouddusk.local"
-  ],
-  "requestMessage": "Private connection request from Fabric to on-premises SQL"
-}</pre>
-
-        <h2>Approve the Private Link Connection from Azure</h2>
-
-        <p>Once the Managed Private Endpoint is created in Microsoft Fabric, the corresponding connection request appears on the Azure Private Link Service.</p>
-
-        <p>From the Azure Portal, navigate to:</p>
-
-        <pre>Private Link Service → pls-directconnect001 → Settings → Private endpoint connections</pre>
-
-        <p>The new connection initially requires approval from the Private Link Service owner.</p>
-
-        <p>In my case, the connection request appeared in the list with the Connection state ready for approval.</p>
-
-        <p>I selected the connection and clicked Approve.</p>
-
-        <p>After approval, Azure shows:</p>
-
-        <ul>
-          <li>✅ Connection state: Approved</li>
-          <li>✅ The associated Fabric private endpoint is listed</li>
-          <li>✅ The connection is ready for the Fabric Managed Private Endpoint to use</li>
-        </ul>
-
-        <p>This approval establishes the private link between the Microsoft Fabric Managed Private Endpoint and the Azure Private Link Service.</p>
-
-        <p>The next step is to verify the connection from the Fabric workspace and then test connectivity to the on-premises SQL Server from a Fabric Notebook.</p>
-
-        <h2>8. Verifying the Managed Private Endpoint</h2>
-
-        <p>After creating the endpoint, I used the Fabric REST API to check the endpoint.</p>
-
-        <p>For example:</p>
-
-        <pre>GET https://api.fabric.microsoft.com/v1/workspaces/{workspaceId}/managedPrivateEndpoints</pre>
-
-        <p>The important things to verify are:</p>
-
-        <ul>
-          <li>Endpoint name</li>
-          <li>Provisioning state</li>
-          <li>Connection state</li>
-          <li>FQDN</li>
-          <li>Private Link resource ID</li>
-        </ul>
-
-        <p>The endpoint needs to be successfully provisioned and the Private Link connection needs to be approved.</p>
-
-        <h3>Verify the Managed Private Endpoint</h3>
-
-        <p>After creating the managed private endpoint, I verified it from the Fabric workspace:</p>
-
-        <pre>Workspace → Workspace settings → Network security → Managed private endpoints</pre>
-
-        <p>As shown below, my endpoint <code>onprem-sql-endpoint001</code> shows:</p>
-
-        <ul>
-          <li>✅ Activation: Succeeded</li>
-          <li>✅ Approval: Approved</li>
-        </ul>
-
-        <p>This confirms that the Managed Private Endpoint has been successfully provisioned and the Private Link connection has been approved.</p>
-
-        <p>With the endpoint approved, the next step is to validate end-to-end connectivity from the Fabric Notebook to the on-premises SQL Server using JDBC.</p>
-
-        <h2>9. Testing SQL Server from Ubuntu</h2>
-
-        <p>Once the network path was available, I installed <code>sqlcmd</code> on Ubuntu.</p>
-
-        <p>This was useful because <code>telnet</code> and <code>nc</code> only tell me whether TCP connectivity exists.</p>
-
-        <p><code>sqlcmd</code> actually tests SQL Server.</p>
-
-        <p>For example:</p>
-
-        <pre>sqlcmd \
-  -S sqlserver.corp.clouddusk.local,1433 \
-  -U &lt;SQL_USER&gt; \
-  -P '&lt;SQL_PASSWORD&gt;'</pre>
-
-        <p>Once connected:</p>
-
-        <pre>SELECT @@SERVERNAME;GO</pre>
-
-        <p>This gave me much more confidence that the complete network path to SQL Server was working.</p>
-
-        <h2>10. Connecting from the Fabric Notebook</h2>
-
-        <p>Once the network connectivity was working, the Fabric Notebook code was relatively straightforward.</p>
-
-        <p>I used JDBC:</p>
-
-        <pre>serverName = "sqlserver.corp.clouddusk.local"
-database = "AdventureWorksLT2017"
-dbPort = 1433
-
-jdbcURL = (
-    f"jdbc:sqlserver://{serverName}:{dbPort};"
-    f"databaseName={database};"
-    "encrypt=true;"
-    "trustServerCertificate=true"
-)
-
-connectionProps = {
-    "user": "&lt;SQL_USER&gt;",
-    "password": "&lt;SQL_PASSWORD&gt;",
-    "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-}</pre>
-
-        <p>Then I could read a SQL Server table:</p>
-
-        <pre>df = spark.read.jdbc(
-    url=jdbcURL,
-    table="SalesLT.Customer",
-    properties=connectionProps
-)
-display(df)</pre>
-
-        <h2>11. A database error that turned out not to be networking</h2>
-
-        <p>At one point I received:</p>
-
-        <pre>SQLServerException: Invalid object name 'dbo.Customers'</pre>
-
-        <p>This initially looked like another connectivity problem.</p>
-
-        <p>It wasn’t.</p>
-
-        <p>The JDBC connection was already successful.</p>
-
-        <p>The problem was simply that I was using the wrong table name.</p>
-
-        <p>The AdventureWorksLT database uses:</p>
-
-        <pre>SalesLT.Customer</pre>
-
-        <p>rather than:</p>
-
-        <pre>dbo.Customers</pre>
-
-        <p>So changing the table to:</p>
-
-        <pre>table="SalesLT.Customer"</pre>
-
-        <p>resolved the problem.</p>
-
-        <p>This was probably one of the most useful lessons from the entire exercise:</p>
-
-        <blockquote>Once JDBC successfully reaches SQL Server, stop troubleshooting the Azure network. Start looking at the database, schema, table, authentication, and permissions.</blockquote>
-
-        <h2>12. Writing the data into the Fabric Lakehouse</h2>
-
-        <p>Once I successfully loaded the SQL Server data into a Spark DataFrame, I could write it into the Fabric Lakehouse as a Delta table.</p>
-
-        <pre>df.write \
-    .mode("overwrite") \
-    .format("delta") \
-    .saveAsTable("Customers")</pre>
-
-        <p>So the complete flow became:</p>
-
-        <pre>On-Prem SQL Server → Private networking → Fabric Managed Private Endpoint → Fabric Notebook → JDBC → Spark DataFrame → Fabric Lakehouse → Delta Table</pre>
-
-        <h2>13. My troubleshooting checklist</h2>
-
-        <p>If I had to do this again, I would troubleshoot in this exact order.</p>
-
-        <h3>1. DNS</h3>
-        <pre>getent hosts sqlserver.corp.clouddusk.local</pre>
-
-        <h3>2. TCP</h3>
-        <pre>nc -vz sqlserver.corp.clouddusk.local 1433</pre>
-
-        <h3>3. SQL Server</h3>
-        <pre>sqlcmd -S sqlserver.corp.clouddusk.local,1433</pre>
-
-        <h3>4. Private Link</h3>
-        <pre>Verify: Managed Private Endpoint → Provisioned → Connection Approved</pre>
-
-        <h3>5. JDBC</h3>
-        <pre>spark.read.jdbc(...)</pre>
-
-        <h3>6. Database</h3>
-        <pre>Verify: Database → Schema → Table → Permissions</pre>
-
-        <p>This layered approach prevents spending hours changing Fabric settings when the real problem is DNS or SQL Server.</p>
-
-        <h2>What I learned</h2>
-
-        <p>This project taught me much more than just how to connect Fabric to SQL Server.</p>
-
-        <p>The biggest lessons were:</p>
-
-        <ol>
-          <li>Cloud networking is layered. DNS, routing, TCP, Private Link, authentication, JDBC, and the database are separate layers.</li>
-          <li>Test each layer independently. <code>nc</code>, <code>telnet</code>, <code>sqlcmd</code>, and JDBC each answer a different question.</li>
-          <li>Private Link Service Direct Connect can simplify the architecture. For suitable static-IP scenarios, it can remove the need for the traditional Load Balancer + forwarding VM pattern.</li>
-          <li>Fabric REST APIs are useful. I was able to create and inspect the Managed Private Endpoint using the Fabric API.</li>
-          <li>Browser-based API tools are handy. Hoppscotch was enough to test the Fabric REST API without installing Postman.</li>
-          <li>Not every JDBC error is a network error. <code>Invalid object name 'dbo.Customers'</code> turned out to be a schema/table issue after the network connection was already working.</li>
-        </ol>
-
-        <h2>Final architecture</h2>
-
-        <pre>Microsoft Fabric
-  → Fabric Notebook
-  → Managed Private Endpoint
-  → Private Link Service Direct Connect
-  → Private IP routing
-  → VPN / ExpressRoute
-  → On-Prem Network
-  → SQL Server :1433
-  → AdventureWorksLT2017
-  → SalesLT.Customer
-  → Fabric Lakehouse</pre>
-
-        <h2>Final thoughts</h2>
-
-        <div class="feature-visual" aria-label="Final architecture diagram">
-          <svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="finalArchTitle finalArchDesc">
-            <title id="finalArchTitle">Final architecture</title>
-            <desc id="finalArchDesc">Final end-to-end architecture of Microsoft Fabric notebook connected through managed private endpoint and private link service to an on-premises SQL Server behind private routing.</desc>
-            <rect x="0" y="0" width="900" height="330" fill="#0f172a"/>
-            <rect x="35" y="120" width="130" height="90" rx="15" fill="#111827" stroke="#60a5fa"/>
-            <text x="100" y="158" text-anchor="middle" fill="#dbeafe" font-size="20" font-family="Segoe UI, sans-serif">Fabric</text>
-            <text x="100" y="185" text-anchor="middle" fill="#9fb7d6" font-size="16" font-family="Segoe UI, sans-serif">Notebook</text>
-
-            <path d="M165 165 H250" stroke="#60a5fa" stroke-width="4" fill="none"/>
-            <rect x="250" y="90" width="150" height="150" rx="18" fill="#111827" stroke="#7dd3fc"/>
-            <text x="325" y="137" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Managed</text>
-            <text x="325" y="165" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Private</text>
-            <text x="325" y="193" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Endpoint</text>
-
-            <path d="M400 165 H490" stroke="#60a5fa" stroke-width="4" fill="none"/>
-            <rect x="490" y="105" width="150" height="120" rx="18" fill="#111827" stroke="#34d399"/>
-            <text x="565" y="146" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Private Link</text>
-            <text x="565" y="173" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Service</text>
-            <text x="565" y="195" text-anchor="middle" fill="#9fb7d6" font-size="12" font-family="Segoe UI, sans-serif">Direct Connect</text>
-
-            <path d="M640 165 H715" stroke="#60a5fa" stroke-width="4" fill="none"/>
-            <rect x="715" y="90" width="110" height="150" rx="18" fill="#111827" stroke="#fbbf24"/>
-            <text x="770" y="140" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Private</text>
-            <text x="770" y="167" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Network</text>
-            <text x="770" y="194" text-anchor="middle" fill="#9fb7d6" font-size="13" font-family="Segoe UI, sans-serif">VPN / ER</text>
-
-            <path d="M770 240 V280 H150 V280" stroke="#94a3b8" stroke-width="2.5" fill="none" opacity="0.9"/>
-            <rect x="340" y="255" width="260" height="42" rx="12" fill="#111827" stroke="#fbbf24"/>
-            <text x="470" y="283" text-anchor="middle" fill="#fef3c7" font-size="18" font-family="Segoe UI, sans-serif">On-Prem SQL Server</text>
-          </svg>
-        </div>
-
-        <p>What started as:</p>
-
-        <blockquote>“I just need Fabric to read a SQL Server table”</blockquote>
-
-        <p>ended up being a great hands-on lesson in private cloud networking.</p>
-
-        <p>The most valuable part wasn’t the final JDBC code. It was understanding the path that the data takes before JDBC ever gets a chance to run.</p>
-
-        <p>Once the network path was working, the actual Fabric Notebook code was the easy part.</p>
-
-        <h2>References</h2>
-
-        <ul class="reference-list">
-          <li><a href="https://learn.microsoft.com/en-us/fabric/security/connect-to-on-premise-sources-using-managed-private-endpoints" target="_blank" rel="noreferrer">Microsoft Fabric — Connect on-premises data sources using Managed Private Endpoints</a></li>
-          <li><a href="https://learn.microsoft.com/en-us/azure/private-link/configure-private-link-service-direct-connect" target="_blank" rel="noreferrer">Azure — Private Link Service Direct Connect</a></li>
-          <li><a href="https://learn.microsoft.com/en-us/rest/api/fabric/core/managed-private-endpoints" target="_blank" rel="noreferrer">Microsoft Fabric REST API — Managed Private Endpoints</a></li>
-          <li><a href="https://hoppscotch.io/" target="_blank" rel="noreferrer">Hoppscotch — API testing</a></li>
-        </ul>
-
-        <p class="callout">This article is a personal learning record based on my test environment. Private Link Service Direct Connect is currently a Public Preview capability; verify the latest Microsoft documentation and regional availability before implementing it in production.</p>
+        </section>
+
+        <section class="section" id="posts">
+          <div class="section-header">
+            <h2>Latest posts</h2>
+            <a class="meta-link" href="#home">Back to top</a>
+          </div>
+
+          <div class="grid">
+            <article class="card">
+              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">August 15, 2026</div>
+              <h3>Connecting Fabric to an on-prem SQL Server</h3>
+              <p>Private Link, DNS, SQL Server validation, and Fabric Notebook troubleshooting in one end-to-end walkthrough.</p>
+              <div class="tag-row" style="margin-top:16px;">
+                <span class="tag">Fabric</span>
+                <span class="tag">Private Link</span>
+              </div>
+              <p style="margin-top:16px;"><a href="posts/2026-08-15-fabric-private-link.html">Read article →</a></p>
+            </article>
+
+            <article class="card">
+              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">Coming soon</div>
+              <h3>Azure networking checklist</h3>
+              <p>Common connectivity traps and a practical checklist for validating private access before troubleshooting services.</p>
+              <div class="tag-row" style="margin-top:16px;">
+                <span class="tag">Networking</span>
+                <span class="tag">Azure</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">Coming soon</div>
+              <h3>Building secure platform foundations</h3>
+              <p>Designing Azure patterns that balance security, observability, and operational simplicity for growing teams.</p>
+              <div class="tag-row" style="margin-top:16px;">
+                <span class="tag">Architecture</span>
+                <span class="tag">Security</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="about" id="about">
+          <div class="section-header">
+            <h2>About</h2>
+          </div>
+          <div class="card">
+            <p>
+              This blog is focused on practical Azure and data platform engineering topics: networking, Microsoft Fabric, private connectivity, and secure architecture patterns learned through hands-on implementation work.
+            </p>
+          </div>
+        </section>
       </main>
 
-      <footer class="footer">© 2026 dk-clouddusk • Original article: <a href="https://medium.com/@dkzorin/absolutely-6d3cf954e390" target="_blank" rel="noreferrer">Medium</a></footer>
+      <footer class="footer">
+        © 2026 dk-clouddusk
+      </footer>
     </div>
   </body>
 </html>
