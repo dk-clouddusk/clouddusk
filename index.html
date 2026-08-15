@@ -172,6 +172,41 @@
         margin: 1.6em 0;
       }
 
+      .feature-visual {
+        margin: 1.8em 0 2.1em;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(17, 24, 39, 0.92));
+      }
+
+      .feature-visual svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .diagram-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin: 1.6em 0 2em;
+      }
+
+      .diagram-card {
+        background: rgba(17, 24, 39, 0.82);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+      }
+
+      .diagram-card svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+
       .reference-list {
         padding-left: 1.2rem;
       }
@@ -231,6 +266,50 @@
 
         <p>This post captures what I learned along the way.</p>
 
+        <div class="feature-visual" aria-label="Article architecture overview">
+          <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="archTitle archDesc">
+            <title id="archTitle">Private connectivity architecture</title>
+            <desc id="archDesc">Diagram showing Microsoft Fabric Notebook connecting through a managed private endpoint and Azure Private Link Service before reaching an on-premises SQL Server via private networking.</desc>
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#60a5fa"/>
+                <stop offset="100%" stop-color="#a78bfa"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="320" fill="#0f172a"/>
+            <rect x="40" y="110" width="160" height="90" rx="16" fill="#111827" stroke="#60a5fa"/>
+            <text x="120" y="150" text-anchor="middle" fill="#dbeafe" font-size="20" font-family="Segoe UI, sans-serif">Fabric</text>
+            <text x="120" y="178" text-anchor="middle" fill="#9fb7d6" font-size="16" font-family="Segoe UI, sans-serif">Notebook</text>
+
+            <path d="M200 155 H290" stroke="url(#g1)" stroke-width="4" fill="none"/>
+            <path d="M290 155 L300 155" stroke="url(#g1)" stroke-width="4" fill="none"/>
+            <path d="M290 155 L290 110 M290 155 L290 200" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.7"/>
+
+            <rect x="300" y="75" width="190" height="150" rx="18" fill="#111827" stroke="#7dd3fc"/>
+            <text x="395" y="128" text-anchor="middle" fill="#dbeafe" font-size="19" font-family="Segoe UI, sans-serif">Managed</text>
+            <text x="395" y="156" text-anchor="middle" fill="#dbeafe" font-size="19" font-family="Segoe UI, sans-serif">Private</text>
+            <text x="395" y="184" text-anchor="middle" fill="#dbeafe" font-size="19" font-family="Segoe UI, sans-serif">Endpoint</text>
+
+            <path d="M490 155 H560" stroke="url(#g1)" stroke-width="4" fill="none"/>
+            <rect x="560" y="95" width="180" height="120" rx="18" fill="#111827" stroke="#34d399"/>
+            <text x="650" y="140" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Private Link</text>
+            <text x="650" y="170" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Service</text>
+            <text x="650" y="196" text-anchor="middle" fill="#9fb7d6" font-size="12" font-family="Segoe UI, sans-serif">Direct Connect</text>
+
+            <path d="M740 155 H810" stroke="url(#g1)" stroke-width="4" fill="none"/>
+            <path d="M810 155 L850 155" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.7"/>
+            <rect x="790" y="110" width="80" height="90" rx="14" fill="#16212f" stroke="#a78bfa"/>
+            <text x="830" y="145" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">VPN</text>
+            <text x="830" y="172" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">/ER</text>
+
+            <rect x="590" y="255" width="260" height="38" rx="12" fill="#111827" stroke="#fbbf24"/>
+            <text x="720" y="281" text-anchor="middle" fill="#fef3c7" font-size="18" font-family="Segoe UI, sans-serif">On-Prem SQL Server</text>
+
+            <path d="M650 215 V255" stroke="#fbbf24" stroke-width="3" fill="none"/
+            <path d="M650 215 V255" stroke="#fbbf24" stroke-width="3" fill="none"/>
+          </svg>
+        </div>
+
         <h2>The goal</h2>
 
         <p>The end goal was:</p>
@@ -253,6 +332,50 @@
         </ul>
 
         <p>The important part is that the network path needs to work end-to-end.</p>
+
+        <div class="diagram-grid">
+          <div class="diagram-card" aria-label="Traditional architecture diagram">
+            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tradTitle tradDesc">
+              <title id="tradTitle">Traditional architecture</title>
+              <desc id="tradDesc">Traditional private connectivity architecture requiring load balancer and forwarding VM before on-premises SQL.</desc>
+              <rect x="0" y="0" width="420" height="260" fill="#0f172a"/>
+              <rect x="30" y="90" width="90" height="80" rx="12" fill="#111827" stroke="#60a5fa"/>
+              <text x="75" y="123" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Fabric</text>
+              <text x="75" y="147" text-anchor="middle" fill="#9fb7d6" font-size="15" font-family="Segoe UI, sans-serif">Notebook</text>
+              <rect x="150" y="72" width="120" height="115" rx="12" fill="#111827" stroke="#7dd3fc"/>
+              <text x="210" y="108" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Private Link</text>
+              <text x="210" y="133" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Service</text>
+              <text x="210" y="160" text-anchor="middle" fill="#9fb7d6" font-size="13" font-family="Segoe UI, sans-serif">Load Balancer</text>
+              <rect x="295" y="90" width="95" height="80" rx="12" fill="#111827" stroke="#34d399"/>
+              <text x="342" y="123" text-anchor="middle" fill="#dbeafe" font-size="16" font-family="Segoe UI, sans-serif">Forwarding</text>
+              <text x="342" y="147" text-anchor="middle" fill="#dbeafe" font-size="16" font-family="Segoe UI, sans-serif">VM</text>
+              <path d="M120 130 H150 M270 130 H295" stroke="#60a5fa" stroke-width="3" fill="none"/>
+              <path d="M342 170 V210 H110 V210" stroke="#94a3b8" stroke-width="2.5" fill="none" opacity="0.9"/>
+              <text x="220" y="232" text-anchor="middle" fill="#fef3c7" font-size="15" font-family="Segoe UI, sans-serif">On-Prem SQL</text>
+            </svg>
+          </div>
+
+          <div class="diagram-card" aria-label="Direct Connect architecture diagram">
+            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="directTitle directDesc">
+              <title id="directTitle">Direct Connect architecture</title>
+              <desc id="directDesc">Simplified Private Link Service Direct Connect pattern without extra load balancer and forwarding VM.</desc>
+              <rect x="0" y="0" width="420" height="260" fill="#0f172a"/>
+              <rect x="25" y="90" width="95" height="80" rx="12" fill="#111827" stroke="#60a5fa"/>
+              <text x="72" y="125" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Fabric</text>
+              <text x="72" y="150" text-anchor="middle" fill="#9fb7d6" font-size="15" font-family="Segoe UI, sans-serif">Notebook</text>
+              <rect x="145" y="72" width="120" height="115" rx="12" fill="#111827" stroke="#7dd3fc"/>
+              <text x="205" y="110" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Private Link</text>
+              <text x="205" y="136" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Service</text>
+              <text x="205" y="160" text-anchor="middle" fill="#9fb7d6" font-size="13" font-family="Segoe UI, sans-serif">Direct Connect</text>
+              <rect x="295" y="90" width="100" height="80" rx="12" fill="#111827" stroke="#34d399"/>
+              <text x="345" y="124" text-anchor="middle" fill="#dbeafe" font-size="15" font-family="Segoe UI, sans-serif">Private</text>
+              <text x="345" y="148" text-anchor="middle" fill="#dbeafe" font-size="15" font-family="Segoe UI, sans-serif">Network</text>
+              <path d="M120 130 H145 M265 130 H295" stroke="#60a5fa" stroke-width="3" fill="none"/>
+              <path d="M345 170 V210 H75 V210" stroke="#94a3b8" stroke-width="2.5" fill="none" opacity="0.9"/>
+              <text x="210" y="232" text-anchor="middle" fill="#fef3c7" font-size="15" font-family="Segoe UI, sans-serif">On-Prem SQL</text>
+            </svg>
+          </div>
+        </div>
 
         <h2>2. Private Link Service Direct Connect</h2>
 
@@ -625,6 +748,39 @@ display(df)</pre>
   → Fabric Lakehouse</pre>
 
         <h2>Final thoughts</h2>
+
+        <div class="feature-visual" aria-label="Final architecture diagram">
+          <svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="finalArchTitle finalArchDesc">
+            <title id="finalArchTitle">Final architecture</title>
+            <desc id="finalArchDesc">Final end-to-end architecture of Microsoft Fabric notebook connected through managed private endpoint and private link service to an on-premises SQL Server behind private routing.</desc>
+            <rect x="0" y="0" width="900" height="330" fill="#0f172a"/>
+            <rect x="35" y="120" width="130" height="90" rx="15" fill="#111827" stroke="#60a5fa"/>
+            <text x="100" y="158" text-anchor="middle" fill="#dbeafe" font-size="20" font-family="Segoe UI, sans-serif">Fabric</text>
+            <text x="100" y="185" text-anchor="middle" fill="#9fb7d6" font-size="16" font-family="Segoe UI, sans-serif">Notebook</text>
+
+            <path d="M165 165 H250" stroke="#60a5fa" stroke-width="4" fill="none"/>
+            <rect x="250" y="90" width="150" height="150" rx="18" fill="#111827" stroke="#7dd3fc"/>
+            <text x="325" y="137" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Managed</text>
+            <text x="325" y="165" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Private</text>
+            <text x="325" y="193" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Endpoint</text>
+
+            <path d="M400 165 H490" stroke="#60a5fa" stroke-width="4" fill="none"/>
+            <rect x="490" y="105" width="150" height="120" rx="18" fill="#111827" stroke="#34d399"/>
+            <text x="565" y="146" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Private Link</text>
+            <text x="565" y="173" text-anchor="middle" fill="#dbeafe" font-size="18" font-family="Segoe UI, sans-serif">Service</text>
+            <text x="565" y="195" text-anchor="middle" fill="#9fb7d6" font-size="12" font-family="Segoe UI, sans-serif">Direct Connect</text>
+
+            <path d="M640 165 H715" stroke="#60a5fa" stroke-width="4" fill="none"/>
+            <rect x="715" y="90" width="110" height="150" rx="18" fill="#111827" stroke="#fbbf24"/>
+            <text x="770" y="140" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Private</text>
+            <text x="770" y="167" text-anchor="middle" fill="#dbeafe" font-size="17" font-family="Segoe UI, sans-serif">Network</text>
+            <text x="770" y="194" text-anchor="middle" fill="#9fb7d6" font-size="13" font-family="Segoe UI, sans-serif">VPN / ER</text>
+
+            <path d="M770 240 V280 H150 V280" stroke="#94a3b8" stroke-width="2.5" fill="none" opacity="0.9"/>
+            <rect x="340" y="255" width="260" height="42" rx="12" fill="#111827" stroke="#fbbf24"/>
+            <text x="470" y="283" text-anchor="middle" fill="#fef3c7" font-size="18" font-family="Segoe UI, sans-serif">On-Prem SQL Server</text>
+          </svg>
+        </div>
 
         <p>What started as:</p>
 
