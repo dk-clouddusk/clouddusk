@@ -56,6 +56,14 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
   font-weight: 800;
   color: var(--accent-2);
+  display: flex;
+  align-items: center;
+}
+
+.brand img {
+  height: 36px;
+  width: auto;
+  display: block;
 }
 
 .nav {
