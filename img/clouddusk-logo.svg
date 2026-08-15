@@ -1,0 +1,34 @@
+<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7dd3fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Cloud shape with gradient -->
+  <g id="cloud">
+    <!-- Left cloud puff -->
+    <circle cx="16" cy="28" r="12" fill="url(#grad1)" opacity="0.9"/>
+    <!-- Center cloud puffs -->
+    <circle cx="28" cy="22" r="14" fill="url(#grad1)" opacity="1"/>
+    <circle cx="42" cy="24" r="13" fill="url(#grad1)" opacity="0.95"/>
+    <!-- Right cloud puff -->
+    <circle cx="54" cy="30" r="11" fill="url(#grad1)" opacity="0.9"/>
+    <!-- Bottom cloud base -->
+    <ellipse cx="35" cy="36" rx="26" ry="10" fill="url(#grad1)" opacity="0.85"/>
+  </g>
+  
+  <!-- Dusk accent - sun/glow -->
+  <circle cx="52" cy="16" r="8" fill="url(#grad2)" opacity="0.8"/>
+  <circle cx="52" cy="16" r="6" fill="url(#grad2)" opacity="0.6"/>
+  
+  <!-- Text: CloudDusk -->
+  <text x="70" y="38" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700" fill="#edf2ff" letter-spacing="0.5">
+    CloudDusk
+  </text>
+</svg>
