@@ -6,6 +6,14 @@
     <title>Article Title | CloudDusk</title>
     <meta name="description" content="Brief description of the article." />
     <link rel="stylesheet" href="../styles.css" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
   </head>
   <body>
     <div class="article-shell">
@@ -38,7 +46,7 @@
 
           <div class="comment-form-wrapper">
             <h3>Leave a comment</h3>
-            <form class="comment-form" action="https://formspree.io/f/mjbkozwb" method="POST">
+            <form class="comment-form" action="https://formspree.io/f/mvkpbadk" method="POST">
               <div class="form-group">
                 <label for="name">Name *</label>
                 <input type="text" id="name" name="name" required placeholder="Your name" />
@@ -67,6 +75,19 @@
           </div>
         </section>
       </main>
+      <footer class="footer">
+        <a href="../index.html">← Back to blog</a> | <span id="pageViews">Page views: 0</span>
+      </footer>
     </div>
+    <script>
+      // Simple page view counter
+      function updatePageViews() {
+        let views = localStorage.getItem('pageViews-' + window.location.pathname) || 0;
+        views = parseInt(views) + 1;
+        localStorage.setItem('pageViews-' + window.location.pathname, views);
+        document.getElementById('pageViews').textContent = 'Page views: ' + views;
+      }
+      updatePageViews();
+    </script>
   </body>
 </html>

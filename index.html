@@ -6,6 +6,14 @@
     <title>dk-clouddusk | Azure blog</title>
     <meta name="description" content="Azure, Microsoft Fabric, and cloud networking notes from real-world implementation work." />
     <link rel="stylesheet" href="styles.css" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
   </head>
   <body>
     <div class="container">
@@ -132,7 +140,7 @@
 
           <div class="comment-form-wrapper">
             <h3>Send feedback</h3>
-            <form class="comment-form" action="https://formspree.io/f/mjbkozwb" method="POST">
+            <form class="comment-form" action="https://formspree.io/f/mvkpbadk" method="POST">
               <div class="form-group">
                 <label for="name">Name *</label>
                 <input type="text" id="name" name="name" required placeholder="Your name" />
@@ -156,8 +164,19 @@
       </main>
 
       <footer class="footer">
-        © 2026 CloudDusk
+        © 2026 CloudDusk | <span id="pageViews">Page views: 0</span>
       </footer>
+    </div>
+    <script>
+      // Simple page view counter
+      function updatePageViews() {
+        let views = localStorage.getItem('pageViews') || 0;
+        views = parseInt(views) + 1;
+        localStorage.setItem('pageViews', views);
+        document.getElementById('pageViews').textContent = 'Page views: ' + views;
+      }
+      updatePageViews();
+    </script>
     </div>
   </body>
 </html>
