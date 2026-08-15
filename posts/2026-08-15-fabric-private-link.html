@@ -259,7 +259,44 @@ display(df)</pre>
         <p>Once the network path was working, the actual data-access code was the easy part. The real value was understanding the path that the data takes before JDBC ever gets a chance to run.</p>
 
         <p>That’s the kind of work I like to document here: practical Azure and data-platform problems, solved with real-world networking and implementation experience.</p>
+
+        <section class="comments-section">
+          <h2>Questions or feedback?</h2>
+          <p class="comments-intro">Have a follow-up question, correction, or want to share your experience? Leave a comment below.</p>
+
+          <div class="comment-form-wrapper">
+            <h3>Leave a comment</h3>
+            <form class="comment-form" action="https://formspree.io/f/mjbkozwb" method="POST">
+              <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Your name" />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="your@email.com" />
+              </div>
+
+              <div class="form-group">
+                <label for="comment">Comment *</label>
+                <textarea id="comment" name="comment" required placeholder="Share your question, correction, or feedback..." rows="5"></textarea>
+              </div>
+
+              <button type="submit" class="submit-button">Post Comment</button>
+              <p class="form-note">Your comment will be reviewed before appearing.</p>
+            </form>
+          </div>
+
+          <div class="comments-list" id="commentsList">
+            <h3>Comments</h3>
+            <div class="no-comments">
+              <p>No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
+
+
   </body>
 </html>

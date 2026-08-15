@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Article Title | CloudDusk</title>
+    <meta name="description" content="Brief description of the article." />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="article-shell">
+      <header class="topbar">
+        <div class="brand"><img src="../img/clouddusk-logo.svg" alt="CloudDusk" /></div>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#featured">Featured</a>
+          <a href="../index.html#posts">Posts</a>
+          <a href="../index.html#about">About</a>
+        </nav>
+      </header>
+
+      <main class="article-body">
+        <a class="back-link" href="../index.html">← Back to blog</a>
+        <div class="article-meta">Month DD, YYYY • Tag • Tag • Tag</div>
+        <h1>Article Title Goes Here</h1>
+
+        <!-- Article content starts here -->
+        <p>Article paragraph content...</p>
+
+        <h2>Section heading</h2>
+        <p>More content...</p>
+
+        <!-- Article content ends here -->
+
+        <section class="comments-section">
+          <h2>Questions or feedback?</h2>
+          <p class="comments-intro">Have a follow-up question, correction, or want to share your experience? Leave a comment below.</p>
+
+          <div class="comment-form-wrapper">
+            <h3>Leave a comment</h3>
+            <form class="comment-form" action="https://formspree.io/f/mjbkozwb" method="POST">
+              <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Your name" />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="your@email.com" />
+              </div>
+
+              <div class="form-group">
+                <label for="comment">Comment *</label>
+                <textarea id="comment" name="comment" required placeholder="Share your question, correction, or feedback..." rows="5"></textarea>
+              </div>
+
+              <button type="submit" class="submit-button">Post Comment</button>
+              <p class="form-note">Your comment will be reviewed before appearing.</p>
+            </form>
+          </div>
+
+          <div class="comments-list" id="commentsList">
+            <h3>Comments</h3>
+            <div class="no-comments">
+              <p>No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

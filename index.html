@@ -123,6 +123,36 @@
             </p>
           </div>
         </section>
+
+        <section class="comments-section" id="feedback">
+          <div class="section-header">
+            <h2>Questions or feedback?</h2>
+          </div>
+          <p class="comments-intro">Have suggestions for topics, corrections, or want to discuss cloud engineering? Send a message below.</p>
+
+          <div class="comment-form-wrapper">
+            <h3>Send feedback</h3>
+            <form class="comment-form" action="https://formspree.io/f/mjbkozwb" method="POST">
+              <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Your name" />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="your@email.com" />
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" required placeholder="Share your feedback, topic suggestions, or questions..." rows="5"></textarea>
+              </div>
+
+              <button type="submit" class="submit-button">Send Message</button>
+              <p class="form-note">I'll get back to you as soon as I can.</p>
+            </form>
+          </div>
+        </section>
       </main>
 
       <footer class="footer">
