@@ -145,7 +145,26 @@ nslookup sqlserver.corp.clouddusk.local</pre>
 
         <p>After approval, the connection state showed as approved and the Managed Private Endpoint became usable.</p>
 
-        <h2>9. Testing SQL Server from Ubuntu</h2>
+        <img src="../img/01-azure-portal-approval.png" alt="Azure Portal showing private endpoint connections with approval status" />
+        <p class="image-caption">Azure Portal: Private endpoint connections showing the approved connection</p>
+
+        <h2>9. Verify the Managed Private Endpoint</h2>
+
+        <p>After creating the endpoint, I verified it from the Fabric workspace to ensure the activation and approval were successful:</p>
+
+        <pre>Workspace → Workspace settings → Network security → Managed private endpoints</pre>
+
+        <p>The endpoint showed:</p>
+
+        <ul>
+          <li>✅ Activation: Succeeded</li>
+          <li>✅ Approval: Approved</li>
+        </ul>
+
+        <img src="../img/02-fabric-managed-endpoints.png" alt="Fabric workspace showing Managed private endpoints with succeeded activation and approved status" />
+        <p class="image-caption">Fabric Workspace: Managed private endpoints verification showing successful activation and approval</p>
+
+        <h2>10. Testing SQL Server from Ubuntu</h2>
 
         <p>Once the network path was valid, I installed sqlcmd to verify the database connectivity in a more realistic way than a simple TCP check.</p>
 
@@ -158,9 +177,12 @@ nslookup sqlserver.corp.clouddusk.local</pre>
 
         <pre>SELECT @@SERVERNAME;GO</pre>
 
-        <h2>10. Connecting from the Fabric Notebook</h2>
+        <h2>11. Connecting from the Fabric Notebook</h2>
 
         <p>Once the network was valid, the JDBC connection itself was straightforward:</p>
+
+        <img src="../img/03-fabric-notebook-code.png" alt="Fabric Notebook showing JDBC connection code and Spark DataFrame" />
+        <p class="image-caption">Fabric Notebook: JDBC connection code and Spark DataFrame query</p>
 
         <pre>serverName = "sqlserver.corp.clouddusk.local"
 database = "AdventureWorksLT2017"
@@ -188,7 +210,7 @@ connectionProps = {
 )
 display(df)</pre>
 
-        <h2>11. A database error that was not networking</h2>
+        <h2>12. A database error that was not networking</h2>
 
         <p>At one point I got:</p>
 
@@ -208,7 +230,7 @@ display(df)</pre>
 
         <blockquote>Once JDBC successfully reaches SQL Server, stop troubleshooting the Azure network. Start looking at the database, schema, table, authentication, and permissions.</blockquote>
 
-        <h2>12. Writing data into the Fabric Lakehouse</h2>
+        <h2>13. Writing data into the Fabric Lakehouse</h2>
 
         <p>After the data was successfully loaded into Spark, I could write it into the Fabric Lakehouse as a Delta table.</p>
 
@@ -217,7 +239,7 @@ display(df)</pre>
     .format("delta") \
     .saveAsTable("Customers")</pre>
 
-        <h2>13. My troubleshooting checklist</h2>
+        <h2>14. My troubleshooting checklist</h2>
 
         <ol>
           <li>DNS: test hostname resolution</li>

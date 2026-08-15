@@ -369,6 +369,25 @@ h1 {
   margin-bottom: 18px;
 }
 
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin: 1.6em 0;
+  display: block;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.article-body .image-caption {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: -1.2em;
+  margin-bottom: 1.6em;
+  font-style: italic;
+}
+
 @media (max-width: 760px) {
   .topbar {
     flex-direction: column;
