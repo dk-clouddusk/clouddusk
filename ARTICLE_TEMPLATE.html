@@ -28,6 +28,7 @@
           <a href="../index.html#featured">Featured</a>
           <a href="../index.html#posts">Posts</a>
           <a href="../index.html#about">About</a>
+          <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle dark/light theme">🌙</button>
         </nav>
       </header>
 
@@ -92,6 +93,38 @@
         document.getElementById('pageViews').textContent = 'Page views: ' + views;
       }
       updatePageViews();
+    </script>
+    <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      
+      // Load saved theme preference or use system preference
+      function initTheme() {
+        const saved = localStorage.getItem('theme') || 'dark';
+        setTheme(saved);
+      }
+      
+      function setTheme(theme) {
+        if (theme === 'light') {
+          html.setAttribute('data-theme', 'light');
+          themeToggle.textContent = '☀️';
+          localStorage.setItem('theme', 'light');
+        } else {
+          html.removeAttribute('data-theme');
+          themeToggle.textContent = '🌙';
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+      
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+      });
+      
+      // Initialize theme on page load
+      initTheme();
     </script>
   </body>
 </html>
