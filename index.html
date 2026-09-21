@@ -1,231 +1,82 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dk-clouddusk | Azure blog</title>
-    <meta name="description" content="Azure, Microsoft Fabric, and cloud networking notes from real-world implementation work." />
-    <link rel="stylesheet" href="styles-minimal-mistakes.css" />
-    <!-- Favicon -->
+    <title>CloudDusk | Practical cloud engineering notes</title>
+    <meta name="description" content="Field notes on Azure, Microsoft Fabric, Databricks, networking, and secure data platforms." />
+    <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/svg+xml" href="img/clouddusk-logo.svg" />
     <link rel="apple-touch-icon" href="img/clouddusk-logo.svg" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5G7KYWCNV"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-Y5G7KYWCNV');
-    </script>
   </head>
   <body>
-    <div class="container">
-      <header class="topbar">
-        <div class="brand"><img src="img/clouddusk-logo.svg" alt="CloudDusk" /></div>
-        <nav class="nav" aria-label="Main navigation">
-          <a href="#home">Home</a>
-          <a href="#featured">Featured</a>
-          <a href="#posts">Posts</a>
-          <a href="#about">About</a>
-          <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle dark/light theme">🌙</button>
+    <div class="site-shell">
+      <header class="masthead">
+        <a class="wordmark" href="#top" aria-label="CloudDusk home"><img src="img/clouddusk-logo.svg" alt="CloudDusk" /></a>
+        <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+          <a href="#journal">Journal</a><a href="#topics">Topics</a><a href="#about">About</a>
+          <a class="nav-cta" href="#feedback">Start a conversation <span aria-hidden="true">↗</span></a>
         </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Toggle navigation">Menu</button>
       </header>
 
-      <main>
-        <section class="hero" id="home">
-          <div class="hero-inner">
-            <div class="hero-tag">Azure blog</div>
-            <h1>Real-world Azure and Fabric notes from the field.</h1>
-            <p class="lead">
-              Practical cloud architecture, networking, and Microsoft Fabric learnings for engineers solving real production problems.
-            </p>
-            <div class="hero-actions">
-              <a class="button primary" href="#featured">Read featured post</a>
-              <a class="button" href="#posts">Browse all posts</a>
+      <main id="top">
+        <section class="intro-grid" aria-labelledby="intro-title">
+          <div class="intro-copy">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> Build / learn / troubleshoot / share</p>
+            <h1 id="intro-title">The useful parts of cloud engineering.</h1>
+            <p class="intro-lead">Practical notes from the places where architecture meets reality: private networks, data platforms, identity, and the small details that make production systems hold together.</p>
+            <div class="intro-actions"><a class="button button-dark" href="#journal">Explore the journal <span aria-hidden="true">↓</span></a><a class="text-link" href="#about">What is CloudDusk? <span aria-hidden="true">↗</span></a></div>
+          </div>
+          <div class="intro-aside" aria-label="CloudDusk focus areas">
+            <div class="aside-topline"><span>Field notes / 2026</span><span>01—04</span></div>
+            <div class="signal-orbit" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit-core"></span><span class="orbit-label label-azure">AZ</span><span class="orbit-label label-data">DATA</span><span class="orbit-label label-net">NET</span></div>
+            <p class="aside-note">A working notebook for engineers who would rather verify the path than trust the diagram.</p>
+          </div>
+        </section>
+
+        <div class="topic-ribbon" aria-label="Topics covered"><span>Azure</span><span>Microsoft Fabric</span><span>Databricks</span><span>Private networking</span><span>Data platforms</span></div>
+
+        <section class="feature-section" id="journal" aria-labelledby="feature-title">
+          <div class="section-kicker"><span>01</span><span>Featured field note</span><span class="rule"></span></div>
+          <div class="feature-layout">
+            <div class="feature-copy">
+              <p class="post-meta">Databricks / September 21, 2026</p>
+              <h2 id="feature-title"><a href="posts/databricks-serverless-ncc.html">Databricks Serverless, NCC, and the private path to Azure SQL.</a></h2>
+              <p>A screenshot-driven lab report on OAuth U2M, private endpoint approval, DNS validation, and TCP connectivity from Serverless compute.</p>
+              <a class="arrow-link" href="posts/databricks-serverless-ncc.html">Read the field note <span aria-hidden="true">↗</span></a>
             </div>
+            <a class="feature-image" href="posts/databricks-serverless-ncc.html" aria-label="Read Databricks Serverless and NCC article"><img src="posts/assets/step-10.png" alt="Databricks NCC private endpoint showing established status" /><span class="image-label">NCC / ESTABLISHED</span></a>
           </div>
         </section>
 
-        <section class="featured" id="featured">
-          <div class="section-header">
-            <h2>Featured article</h2>
-            <a class="meta-link" href="posts/2026-08-15-fabric-private-link.html">Open article</a>
-          </div>
-
-          <div class="featured-panel">
-            <div class="featured-copy">
-              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">August 15, 2026</div>
-              <h3><a href="posts/2026-08-15-fabric-private-link.html">Connecting an On-Premises Data Source to Microsoft Fabric Using Private Link Service Direct Connect</a></h3>
-              <p>
-                A hands-on walkthrough of how to securely connect a Microsoft Fabric Notebook to an on-premises SQL Server using Private Link Service Direct Connect, DNS validation, and real troubleshooting steps.
-              </p>
-              <div class="tag-row">
-                <span class="tag">Azure</span>
-                <span class="tag">Fabric</span>
-                <span class="tag">Networking</span>
-              </div>
-            </div>
-
-            <ul class="article-list">
-              <li>
-                <div class="post-card">
-                  <div class="date">Azure</div>
-                  <h4>Private networking pattern</h4>
-                  <p>How to keep the data source private while still enabling a Fabric Notebook to access it securely.</p>
-                </div>
-              </li>
-              <li>
-                <div class="post-card">
-                  <div class="date">Fabric</div>
-                  <h4>Managed private endpoints</h4>
-                  <p>Using the Fabric REST API to provision, verify, and approve the private link connection.</p>
-                </div>
-              </li>
-            </ul>
+        <section class="journal-section" aria-labelledby="journal-title">
+          <div class="section-kicker"><span>02</span><span id="journal-title">Recent notes</span><span class="rule"></span><a href="#top">Back to top ↑</a></div>
+          <div class="journal-grid">
+            <article class="journal-card journal-card-featured"><div class="card-number">02</div><p class="post-meta">Azure / Fabric / August 15, 2026</p><h3><a href="posts/2026-08-15-fabric-private-link.html">Connecting an on-premises data source to Microsoft Fabric.</a></h3><p>Private Link Service Direct Connect, managed private endpoints, DNS, and JDBC troubleshooting in one end-to-end build.</p><a class="arrow-link" href="posts/2026-08-15-fabric-private-link.html">Read the article <span aria-hidden="true">↗</span></a></article>
+            <article class="journal-card journal-card-muted"><div class="card-number">03</div><p class="post-meta">Coming next / Azure networking</p><h3>Network checks before the debugging spiral.</h3><p>A compact checklist for validating DNS, routes, firewalls, and private access before blaming the service.</p><span class="status-label">In the workshop</span></article>
+            <article class="journal-card journal-card-dark"><div class="card-number">04</div><p class="post-meta">Coming next / Architecture</p><h3>Secure foundations that stay operable.</h3><p>Notes on balancing security, observability, and the human cost of a platform that is too clever.</p><span class="status-label">On the desk</span></article>
           </div>
         </section>
 
-        <section class="section" id="posts">
-          <div class="section-header">
-            <h2>Latest posts</h2>
-            <a class="meta-link" href="#home">Back to top</a>
-          </div>
-
-          <div class="grid">
-            <article class="card">
-              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">September 21, 2026</div>
-              <h3><a href="posts/databricks-serverless-ncc.html">Databricks Serverless and NCC</a></h3>
-              <p>A screenshot-driven guide to OAuth U2M, private endpoint approval, DNS validation, and TCP connectivity to Azure SQL Server.</p>
-              <div class="tag-row" style="margin-top:16px;">
-                <span class="tag">Databricks</span>
-                <span class="tag">NCC</span>
-                <span class="tag">Networking</span>
-              </div>
-              <p style="margin-top:16px;"><a href="posts/databricks-serverless-ncc.html">Read article →</a></p>
-            </article>
-
-            <article class="card">
-              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">August 15, 2026</div>
-              <h3><a href="posts/2026-08-15-fabric-private-link.html">Connecting Fabric to an on-prem SQL Server</a></h3>
-              <p>Private Link, DNS, SQL Server validation, and Fabric Notebook troubleshooting in one end-to-end walkthrough.</p>
-              <div class="tag-row" style="margin-top:16px;">
-                <span class="tag">Fabric</span>
-                <span class="tag">Private Link</span>
-              </div>
-              <p style="margin-top:16px;"><a href="posts/2026-08-15-fabric-private-link.html">Read article →</a></p>
-            </article>
-
-            <article class="card">
-              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">Coming soon</div>
-              <h3>Azure networking checklist</h3>
-              <p>Common connectivity traps and a practical checklist for validating private access before troubleshooting services.</p>
-              <div class="tag-row" style="margin-top:16px;">
-                <span class="tag">Networking</span>
-                <span class="tag">Azure</span>
-              </div>
-            </article>
-
-            <article class="card">
-              <div class="date" style="display:inline-block;color:var(--accent);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;">Coming soon</div>
-              <h3>Building secure platform foundations</h3>
-              <p>Designing Azure patterns that balance security, observability, and operational simplicity for growing teams.</p>
-              <div class="tag-row" style="margin-top:16px;">
-                <span class="tag">Architecture</span>
-                <span class="tag">Security</span>
-              </div>
-            </article>
-          </div>
+        <section class="lower-grid" id="topics">
+          <div class="topic-panel"><div class="section-kicker"><span>03</span><span>Working map</span></div><h2>Follow the thread.</h2><p>The notes cluster around the seams between services, because that is where the interesting failures usually live.</p><div class="topic-list"><a href="#journal"><span>01</span>Cloud networking <b>↗</b></a><a href="#journal"><span>02</span>Data platforms <b>↗</b></a><a href="#journal"><span>03</span>Identity and access <b>↗</b></a><a href="#journal"><span>04</span>Production patterns <b>↗</b></a></div></div>
+          <div class="about-panel" id="about"><p class="eyebrow"><span class="eyebrow-dot"></span> About the notebook</p><h2>Less ceremony. More signal.</h2><p>CloudDusk is a practical cloud and data engineering journal. Every note aims to leave behind something testable: a topology, a command, a failure mode, or a clearer next step.</p><div class="about-signature"><span class="signature-mark">CD</span><span>CloudDusk<br /><small>Practical cloud &amp; data engineering</small></span></div></div>
         </section>
 
-        <section class="about" id="about">
-          <div class="section-header">
-            <h2>About</h2>
-          </div>
-          <div class="card">
-            <p>
-              This blog is focused on practical Azure and data platform engineering topics: networking, Microsoft Fabric, private connectivity, and secure architecture patterns learned through hands-on implementation work.
-            </p>
-          </div>
-        </section>
-
-        <section class="comments-section" id="feedback">
-          <div class="section-header">
-            <h2>Questions or feedback?</h2>
-          </div>
-          <p class="comments-intro">Have suggestions for topics, corrections, or want to discuss cloud engineering? Send a message below.</p>
-
-          <div class="comment-form-wrapper">
-            <h3>Send feedback</h3>
-            <form class="comment-form" action="https://formspree.io/f/mvkpbadk" method="POST">
-              <div class="form-group">
-                <label for="name">Name *</label>
-                <input type="text" id="name" name="name" required placeholder="Your name" />
-              </div>
-
-              <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" required placeholder="your@email.com" />
-              </div>
-
-              <div class="form-group">
-                <label for="message">Message *</label>
-                <textarea id="message" name="message" required placeholder="Share your feedback, topic suggestions, or questions..." rows="5"></textarea>
-              </div>
-
-              <button type="submit" class="submit-button">Send Message</button>
-              <p class="form-note">I'll get back to you as soon as I can.</p>
-            </form>
-          </div>
-        </section>
+        <section class="feedback-section" id="feedback" aria-labelledby="feedback-title"><div><p class="eyebrow"><span class="eyebrow-dot"></span> Open channel</p><h2 id="feedback-title">Have a knot worth unpicking?</h2><p>Corrections, topic ideas, and hard-earned lessons are welcome here.</p></div><form class="feedback-form" action="https://formspree.io/f/mvkpbadk" method="POST"><label><span>Name</span><input type="text" name="name" required placeholder="Your name" /></label><label><span>Email</span><input type="email" name="email" required placeholder="you@example.com" /></label><label class="message-field"><span>Message</span><textarea name="message" required rows="3" placeholder="What are you working through?"></textarea></label><button class="button button-light" type="submit">Send the note <span aria-hidden="true">↗</span></button></form></section>
       </main>
 
-      <footer class="footer">
-        © 2026 CloudDusk | <span id="pageViews">Page views: 0</span>
-      </footer>
+      <footer class="site-footer"><span>© 2026 CloudDusk</span><span>Build / learn / troubleshoot / share</span><a href="#top">Back to top ↑</a></footer>
     </div>
     <script>
-      // Simple page view counter
-      function updatePageViews() {
-        let views = localStorage.getItem('pageViews') || 0;
-        views = parseInt(views) + 1;
-        localStorage.setItem('pageViews', views);
-        document.getElementById('pageViews').textContent = 'Page views: ' + views;
-      }
-      updatePageViews();
-    </script>
-    <script>
-      // Theme toggle functionality
-      const themeToggle = document.getElementById('themeToggle');
-      const html = document.documentElement;
-      
-      // Load saved theme preference or use system preference
-      function initTheme() {
-        const saved = localStorage.getItem('theme') || 'dark';
-        setTheme(saved);
-      }
-      
-      function setTheme(theme) {
-        if (theme === 'light') {
-          html.setAttribute('data-theme', 'light');
-          themeToggle.textContent = '☀️';
-          localStorage.setItem('theme', 'light');
-        } else {
-          html.removeAttribute('data-theme');
-          themeToggle.textContent = '🌙';
-          localStorage.setItem('theme', 'dark');
-        }
-      }
-      
-      themeToggle.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme') || 'dark';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mainNav = document.querySelector('.main-nav');
+      menuToggle.addEventListener('click', () => {
+        const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', String(!isOpen));
+        mainNav.classList.toggle('is-open', !isOpen);
       });
-      
-      // Initialize theme on page load
-      initTheme();
     </script>
-    </div>
   </body>
 </html>
