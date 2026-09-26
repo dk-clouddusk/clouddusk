@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Databricks Serverless to On-Premises SQL | CloudDusk</title>
+    <meta name="description" content="Connect Databricks Serverless to an on-premises SQL Server through NCC, Azure Private Link Service Direct Connect, and private network routing." />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="icon" type="image/svg+xml" href="../img/clouddusk-logo.svg" />
+    <link rel="apple-touch-icon" href="../img/clouddusk-logo.svg" />
+  </head>
+  <body>
+    <div class="article-shell">
+      <header class="topbar">
+        <a class="brand" href="../index.html" aria-label="CloudDusk home"><img src="../img/clouddusk-logo.svg" alt="CloudDusk" /></a>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#journal">Journal</a>
+          <a href="../index.html#topics">Topics</a>
+          <a href="../index.html#about">About</a>
+        </nav>
+      </header>
+
+      <main class="article-body">
+        <a class="back-link" href="../index.html">Back to the journal</a>
+        <div class="article-meta">September 25, 2026 · Azure · Databricks · Networking</div>
+        <h1>Connecting Databricks Serverless to On-Premises SQL Server</h1>
+
+        <p class="article-lead">Databricks Serverless can reach a private data source without placing the compute plane in your virtual network. This guide follows the private path from a Network Connectivity Configuration (NCC), through Azure Private Link Service Direct Connect, across VPN or ExpressRoute, and into an on-premises SQL Server.</p>
+
+        <img src="assets/databricks-onprem-architecture.png" alt="Architecture showing Databricks Serverless NCC connecting through Private Link Service Direct Connect, a customer VNet, and VPN or ExpressRoute to an on-premises SQL Server" />
+        <p class="image-caption">The private route: Serverless compute to NCC, Private Link Service Direct Connect, customer network, then on-premises SQL.</p>
+
+        <h2>The connection path</h2>
+        <p>The components each solve a different part of the route. The NCC provides the Serverless-side private connectivity configuration. The Private Link Service Direct Connect endpoint is exposed in the customer Azure VNet. Existing private routing from that VNet, typically through VPN or ExpressRoute, carries traffic to the on-premises network.</p>
+        <pre>Databricks Serverless
+  → Network Connectivity Configuration (NCC)
+  → Private endpoint to the Private Link Service
+  → Private Link Service Direct Connect
+  → Customer VNet
+  → VPN or ExpressRoute
+  → On-premises SQL Server</pre>
+
+        <h2>Before configuring Databricks</h2>
+        <p>Confirm the destination and network path first. The SQL Server should have a stable private address and a known DNS name. The customer VNet must have working routes to the on-premises subnet, and the VPN or ExpressRoute path, firewalls, and SQL Server listener must allow the database traffic (commonly TCP 1433).</p>
+        <ul>
+          <li>Identify the on-premises SQL Server FQDN, private IP, port, and database.</li>
+          <li>Confirm routing between the customer VNet and the on-premises subnet.</li>
+          <li>Allow the required traffic in Azure and on-premises firewalls.</li>
+          <li>Plan DNS so the name used by the Databricks connection resolves along the intended private path.</li>
+          <li>Have the Azure resource IDs and permissions needed to configure the Private Link Service and NCC rule.</li>
+        </ul>
+
+        <h2>1. Establish the Azure-to-on-premises route</h2>
+        <p>Start by confirming that the customer VNet can reach the SQL Server over the private network. Check effective routes, VPN or ExpressRoute connectivity, network security rules, on-premises firewall policy, and the SQL Server listener. A Private Link connection cannot repair a missing route beyond the Direct Connect endpoint.</p>
+
+        <h2>2. Configure Private Link Service Direct Connect</h2>
+        <p>Configure the Private Link Service Direct Connect path in the customer Azure environment for the on-premises destination. Use the architecture and resource details from your environment, and verify that the service points to the intended private destination before requesting connectivity from Databricks.</p>
+
+        <h2>3. Add the private endpoint rule to the NCC</h2>
+        <p>In the Databricks account, associate the Serverless workspace with the intended NCC. Add a private endpoint rule that targets the customer Private Link Service, then wait for the request to appear on the Azure side. The exact portal labels can vary; validate the resource ID and target before submitting the request.</p>
+
+        <h2>4. Approve and verify the endpoint</h2>
+        <p>Approve the incoming private endpoint connection on the Private Link Service. Return to the NCC and refresh its rule status until it reports <strong>ESTABLISHED</strong>. Treat this as confirmation that the private endpoint lifecycle completed, not as proof that DNS, routing, firewalls, or SQL authentication are correct.</p>
+
+        <h2>5. Test DNS and TCP from Serverless</h2>
+        <p>Run a small network check from the same Serverless compute context that will make the connection. Substitute your SQL Server's DNS name and port. Confirm that resolution returns the expected private address for your design, then test the TCP connection separately.</p>
+        <pre>import socket
+
+host = "&lt;SQL_SERVER_FQDN&gt;"
+port = 1433
+
+addresses = sorted({
+    result[4][0]
+    for result in socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+})
+print("Resolved addresses:", addresses)
+
+with socket.create_connection((host, port), timeout=10):
+    print(f"TCP connection succeeded: {host}:{port}")</pre>
+        <p>If DNS resolves incorrectly, investigate the private DNS design and forwarding path. If DNS is correct but TCP fails, check routes, firewall rules, and the SQL Server listener before changing the Databricks connection.</p>
+
+        <h2>6. Validate the data connection in Unity Catalog</h2>
+        <p>Once the network path is reachable, configure the SQL Server connection in Unity Catalog using the approved authentication method and securely managed credentials. Use the connection to validate access to the intended database, then create and inspect the foreign catalog if that is the consumption pattern for your workspace.</p>
+        <p>Keep network and application validation separate: an established endpoint and successful TCP test do not prove that the credentials, database permissions, or catalog configuration are correct. Validate the foreign catalog and a representative object with the identity that downstream users will use.</p>
+
+        <h2>Troubleshooting by layer</h2>
+        <ul>
+          <li><strong>NCC rule is not established:</strong> Check that the workspace is attached to the expected NCC and that the Azure-side private endpoint request is approved.</li>
+          <li><strong>DNS returns an unexpected address:</strong> Verify the FQDN, private DNS zone or forwarding configuration, and resolution from Serverless compute.</li>
+          <li><strong>DNS works but TCP times out:</strong> Check address routes, VPN or ExpressRoute state, firewall policy, and the SQL Server listener on the configured port.</li>
+          <li><strong>TCP succeeds but catalog validation fails:</strong> Check the connection's authentication method, secret handling, database permissions, and Unity Catalog configuration.</li>
+        </ul>
+
+        <h2>What this validates</h2>
+        <p>This workflow is useful because each check narrows the fault domain: NCC status validates endpoint provisioning; DNS validates name resolution; a TCP test validates transport reachability; and the Unity Catalog connection and foreign catalog validate the data-access layer.</p>
+        <p>Keep resource IDs, tenant details, hostnames, and credentials specific to your environment out of public examples. Store secrets in an approved secret-management system rather than in notebooks or source control.</p>
+
+        <p><a class="back-link" href="../index.html">← Back to CloudDusk</a></p>
+      </main>
+      <footer class="footer">CloudDusk · Practical cloud and data engineering</footer>
+    </div>
+  </body>
+</html>
