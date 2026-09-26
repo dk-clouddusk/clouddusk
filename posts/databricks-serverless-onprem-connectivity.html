@@ -48,36 +48,36 @@
         </ul>
 
         <h2>1. Create the Azure Private Link Service</h2>
-        <p>Create the Private Link Service in the customer subscription and VNet that can reach the on-premises destination. Select the resource group, name, and region for your environment. The first screenshot shows the basic creation settings; the Azure-specific values have been redacted.</p>
-        <img src="assets/databricks-onprem/screenshots/step-01-create-private-link-service.png" loading="lazy" alt="Azure portal Private Link Service creation form with subscription, resource group, service name, and region redacted" />
+        <p>Create the Private Link Service in the customer subscription and VNet that can reach the on-premises destination. Select the resource group, name, and region for your environment. The screenshot shows the basic creation settings.</p>
+        <img src="assets/databricks-onprem/screenshots/step-01-create-private-link-service.png" loading="lazy" alt="Azure portal Private Link Service creation form showing subscription, resource group, service name, and region" />
         <p class="image-caption">Private Link Service creation: choose the customer subscription, resource group, name, and region.</p>
 
         <h2>2. Configure Direct Connect</h2>
-        <p>Choose the destination IP address connection method, specify the privately routable SQL Server destination, and select the source NAT VNet and subnet. Configure private IP allocation for the service according to the customer network design. The example's address and network names are redacted.</p>
-        <img src="assets/databricks-onprem/screenshots/step-02-direct-connect-settings.png" loading="lazy" alt="Private Link Service outbound settings for destination IP, source NAT VNet, subnet, and private IP allocation with values redacted" />
+        <p>Choose the destination IP address connection method, specify the privately routable SQL Server destination, and select the source NAT VNet and subnet. Configure private IP allocation for the service according to the customer network design.</p>
+        <img src="assets/databricks-onprem/screenshots/step-02-direct-connect-settings.png" loading="lazy" alt="Private Link Service outbound settings for destination IP, source NAT VNet, subnet, and private IP allocation" />
         <p class="image-caption">Direct Connect outbound settings: destination IP, source NAT network, subnet, and private IP allocation.</p>
 
         <h2>3. Configure Databricks account networking</h2>
-        <p>In the Databricks account console, open <strong>Security → Networking → Network connectivity configurations</strong>. Create or select the NCC for the Serverless region, then associate the Databricks workspace with it. The screenshot shows the account-level configuration list; configuration names are redacted.</p>
-        <img src="assets/databricks-onprem/screenshots/step-03-ncc-configuration.png" loading="lazy" alt="Databricks account Security networking page listing Network Connectivity Configurations with names redacted" />
+        <p>In the Databricks account console, open <strong>Security → Networking → Network connectivity configurations</strong>. Create or select the NCC for the Serverless region, then associate the Databricks workspace with it. The screenshot shows the account-level configuration list.</p>
+        <img src="assets/databricks-onprem/screenshots/step-03-ncc-configuration.png" loading="lazy" alt="Databricks account Security networking page listing Network Connectivity Configurations" />
         <p class="image-caption">Databricks account console: Network Connectivity Configurations for Serverless.</p>
 
         <h2>4. Add the Private Link Service rule</h2>
-        <p>In the NCC, add a private endpoint rule that targets the Private Link Service resource ID. Supply the SQL Server domain name that the Unity Catalog connection will use. To locate the target resource ID, open the Private Link Service resource details in Azure; the identifier and resource names in this screenshot are redacted.</p>
-        <img src="assets/databricks-onprem/screenshots/step-04-private-link-resource-id.png" loading="lazy" alt="Azure Private Link Service resource details with service name, resource ID, subscription, and resource group redacted" />
-        <p class="image-caption">Locate the Private Link Service resource ID for the NCC rule; environment-specific identifiers are hidden.</p>
+        <p>In the NCC, add a private endpoint rule that targets the Private Link Service resource ID. Supply the SQL Server domain name that the Unity Catalog connection will use. To locate the target resource ID, open the Private Link Service resource details in Azure.</p>
+        <img src="assets/databricks-onprem/screenshots/step-04-private-link-resource-id.png" loading="lazy" alt="Azure Private Link Service resource details showing the service name and resource ID" />
+        <p class="image-caption">Locate the Private Link Service resource ID for the NCC rule.</p>
 
         <h2>5. Approve and verify the private endpoint</h2>
         <p>On the customer Azure side, open the Private Link Service's private endpoint connections and approve the pending Databricks request. Return to the NCC and refresh the rule until its connection status is <strong>ESTABLISHED</strong>. Approval completes the endpoint handshake; it does not validate SQL credentials or database permissions.</p>
-        <img src="assets/databricks-onprem/screenshots/step-05-approve-private-endpoint.png" loading="lazy" alt="Azure Private Link Service private endpoint connections page showing an approved connection with identifiers redacted" />
+        <img src="assets/databricks-onprem/screenshots/step-05-approve-private-endpoint.png" loading="lazy" alt="Azure Private Link Service private endpoint connections page showing the approval workflow and approved connection" />
         <p class="image-caption">Azure Private Link Service: approve the pending private endpoint connection.</p>
-        <img src="assets/databricks-onprem/screenshots/step-05-ncc-established.png" loading="lazy" alt="Databricks NCC private endpoint rule showing ESTABLISHED with resource, domain, and endpoint names redacted" />
+        <img src="assets/databricks-onprem/screenshots/step-05-ncc-established.png" loading="lazy" alt="Databricks NCC private endpoint rule showing ESTABLISHED" />
         <p class="image-caption">Databricks NCC: confirm the private endpoint rule reaches ESTABLISHED.</p>
 
         <h2>6. Create the Unity Catalog SQL Server connection</h2>
         <p>Create a Unity Catalog connection of type <strong>SQLSERVER</strong>. Set the SQL Server host name, port, user, and password, and apply the certificate-trust option only if it matches your organization's security requirements. The example uses port 1433; replace the host and credentials with approved values and store secrets securely.</p>
-        <img src="assets/databricks-onprem/screenshots/step-06-uc-connection.png" loading="lazy" alt="Databricks SQL cell defining a SQL Server Unity Catalog connection with connection name, host, username, and secret reference redacted" />
-        <p class="image-caption">Unity Catalog SQL Server connection: the credential and host values are redacted.</p>
+        <img src="assets/databricks-onprem/screenshots/step-06-uc-connection.png" loading="lazy" alt="Databricks SQL cell defining a SQL Server Unity Catalog connection with host, port, user, password reference, and certificate option" />
+        <p class="image-caption">Unity Catalog SQL Server connection definition.</p>
 
         <h2>7. Create the foreign catalog</h2>
         <p>Create a foreign catalog using the SQL Server connection and specify the remote database. The guide uses a SQL statement in this form:</p>
@@ -86,14 +86,14 @@ USING CONNECTION &lt;connection_name&gt;
 OPTIONS (
   database '&lt;database_name&gt;'
 );</pre>
-        <img src="assets/databricks-onprem/screenshots/step-07-create-foreign-catalog.png" loading="lazy" alt="Databricks SQL statement creating a foreign catalog with catalog, connection, and database names redacted" />
-        <p class="image-caption">Create the foreign catalog from the SQL Server connection; environment-specific names are hidden.</p>
+        <img src="assets/databricks-onprem/screenshots/step-07-create-foreign-catalog.png" loading="lazy" alt="Databricks SQL statement creating a foreign catalog from a SQL Server connection" />
+        <p class="image-caption">Create the foreign catalog from the SQL Server connection.</p>
 
         <h2>8. Validate the foreign catalog in Catalog Explorer</h2>
-        <p>Open Catalog Explorer and verify that the foreign catalog, remote schema, and tables are visible. The supplied screenshots show a remote customer table and its metadata; customer rows, catalog names, user details, and IDs have been redacted.</p>
-        <img src="assets/databricks-onprem/screenshots/step-08-catalog-table-view.png" loading="lazy" alt="Databricks Catalog Explorer showing a foreign catalog and customer table with catalog identifiers and table rows redacted" />
+        <p>Open Catalog Explorer and verify that the foreign catalog, remote schema, and tables are visible. The supplied screenshots show a remote customer table and its metadata.</p>
+        <img src="assets/databricks-onprem/screenshots/step-08-catalog-table-view.png" loading="lazy" alt="Databricks Catalog Explorer showing a foreign catalog and sample rows from a remote customer table" />
         <p class="image-caption">Catalog Explorer: browse a table exposed through the foreign catalog.</p>
-        <img src="assets/databricks-onprem/screenshots/step-08-catalog-table-details.png" loading="lazy" alt="Databricks Catalog Explorer table details showing type FOREIGN with catalog names, timestamps, user email, and table ID redacted" />
+        <img src="assets/databricks-onprem/screenshots/step-08-catalog-table-details.png" loading="lazy" alt="Databricks Catalog Explorer table details showing the foreign table type" />
         <p class="image-caption">Table details confirm the selected object is a foreign table.</p>
 
         <h2>Validation boundaries</h2>
@@ -102,7 +102,7 @@ OPTIONS (
           <li><strong>Unity Catalog connection:</strong> Confirms the SQL Server connection configuration and authentication work.</li>
           <li><strong>Foreign catalog:</strong> Catalog Explorer visibility confirms the remote database objects are exposed to the intended identity.</li>
         </ul>
-        <p>Do not copy resource IDs, IP addresses, hostnames, account names, or credentials from screenshots into public examples. Replace the placeholders with values approved for your own environment.</p>
+        <p>The screenshots show values from the demonstrated Azure and Databricks environment. Use the resource IDs, network addresses, hostnames, and credentials appropriate to your own deployment.</p>
 
         <p><a class="back-link" href="../index.html">← Back to CloudDusk</a></p>
       </main>
